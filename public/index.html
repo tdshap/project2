@@ -1,0 +1,40 @@
+<html>
+<head>
+	<title>My Contacts</title>
+	<script src='javascripts/jquery.js'></script>
+	<script src='javascripts/underscore.js'></script>
+	<script src='javascripts/backbone.js'></script>
+</head>
+<body>
+	<h1>Your Contacts</h1>
+	
+	<h4>Family</h4>
+	<ul class="family">
+	</ul>
+
+	<h4>Friends</h4>
+	<ul class="friends">
+	</ul>
+
+	<h4>Co-Workers</h4>
+	<ul class="work">
+	</ul>
+	
+	<div class="form">
+		Name: <input name="name" type="text"><br>
+		Age: <input name="age" type="text"><br>
+		Address: <input name="address" type="text"><br>
+		Phone number: <input name="phone_number" type="text"><br>
+		Picture url: <input name="picture" type="text"><br>
+		Choose a group:
+		<select>
+			<option value= "1">Friends</option>
+			<option value="2">Family</option>
+			<option value="3">Work</option>
+		</select><br>
+		<button class="add"> Add Contact</button>
+	</div>
+	
+	<script src='javascripts/scripts.js'></script>
+</body>
+</html>
