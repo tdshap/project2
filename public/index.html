@@ -1,40 +1,173 @@
 <html>
 <head>
 	<title>My Contacts</title>
+
 	<script src='javascripts/jquery.js'></script>
 	<script src='javascripts/underscore.js'></script>
 	<script src='javascripts/backbone.js'></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+
+	<!-- Optional theme -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+
+	<link rel="stylesheet" href="./styles.css">
+	<!-- Latest compiled and minified JavaScript -->
+
+	<script src ="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 </head>
 <body>
-	<h1>Your Contacts</h1>
-	
-	<h4>Family</h4>
-	<ul class="family">
-	</ul>
+	<div class="container">
+		<h1>Your Contacts</h1>
 
-	<h4>Friends</h4>
-	<ul class="friends">
-	</ul>
+		<h4>Family</h4>
+		<hr>
+		<table class="table striped">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Age</th>
+					<th>Address</th>
+					<th>Phone Number</th>
+					<th>Image</th>
+					<th>Buttons</th>
+				</tr>
+			</thead>
+			<tbody class="family">
+				<script type="text/template" id="family-list-template">
+				<td><%= name %></td>
+				<td><%= age %> </td>
+				<td><%= address %> </td>
+				<td><%= phone_number %> </td>
+				<td><%= picture %> </td>
+				<td><button class="editfamily btn btn-primary" data-toggle="modal" data-target="#editForm">Edit</button></td>
+				</script>
+			</tbody>		
+		</table>
+		<h4>Friends</h4>
+		<hr>
+		<table class="table striped">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Age</th>
+					<th>Address</th>
+					<th>Phone Number</th>
+					<th>Image</th>
+					<th>Buttons</th>
+				</tr>
+			</thead>
+			
+			<tbody class="friends">
+				<script type="text/template" id="friends-list-template">
+				<td><%= name %></td>
+				<td><%= age %> </td>
+				<td><%= address %> </td>
+				<td><%= phone_number %> </td>
+				<td><%= picture %> </td>
+				<td><button class="editfriends btn btn-primary" data-toggle="modal" data-target="#editForm">Edit</button></td>			
+				</script>
+			</tbody>		
+		</table>
 
-	<h4>Co-Workers</h4>
-	<ul class="work">
-	</ul>
-	
-	<div class="form">
-		Name: <input name="name" type="text"><br>
-		Age: <input name="age" type="text"><br>
-		Address: <input name="address" type="text"><br>
-		Phone number: <input name="phone_number" type="text"><br>
-		Picture url: <input name="picture" type="text"><br>
-		Choose a group:
-		<select>
-			<option value= "1">Friends</option>
-			<option value="2">Family</option>
-			<option value="3">Work</option>
-		</select><br>
-		<button class="add"> Add Contact</button>
+		<h4>Co-Workers</h4>
+		<hr>
+		<table class="table striped">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Age</th>
+					<th>Address</th>
+					<th>Phone Number</th>
+					<th>Image</th>
+					<th>Buttons</th>
+				</tr>
+			</thead>	
+			<tbody class="work">
+				<script type="text/template" id="work-list-template">
+				<td><%= name %></td>
+				<td><%= age %> </td>
+				<td><%= address %> </td>
+				<td><%= phone_number %> </td>
+				<td><%= picture %> </td>
+				<td><button class="editwork btn btn-primary" data-toggle="modal" data-target="#editForm">Edit</button></td>
+				</script>
+			</tbody>		
+		</table>
+
+
+
+		<!-- Button trigger modal -->
+		<button class="btn btn-primary btn-md" data-toggle="modal" data-target="#addForm">
+			Add Contact
+		</button>
+
+		<!-- Add Contact Modal -->
+		<div class="modal fade" id="addForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="modal-content add">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+						<h4 class="modal-title" id="myModalLabel">New Contact</h4>
+					</div>
+					<div class="modal-body">
+						<div class="form">
+							<label>Name: </label><input name="name" type="text"><br>
+							<label>Age: </label><input name="age" type="text"><br>
+							<label>Address: </label><input name="address" type="text"><br>
+							<label>Phone Number: </label><input name="phone_number" type="text"><br>
+							<label>Picture url: </label><input name="picture" type="text"><br>
+							<label>Choose group: </label>
+							<select>
+								<option value="7">Friends</option>
+								<option value="8">Family</option>
+								<option value="9">Work</option>
+							</select><br>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+						<button id="add" class="add btn btn-primary">Add</button>
+					</div>
+				</div>
+			</div>
+		</div> <!-- end Add contact modal -->
+		
+		<!-- Edit Contact Modal -->
+		<div class="modal fade" id="editForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+			<div class="modal-dialog">
+				<div class="edit modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+						<h4 class="modal-title" id="myModalLabel">Edit Contact</h4>
+					</div>
+					<div class="modal-body">
+						<div class="form">
+							<label>Name: </label><input name="name" type="text"><br>
+							<label>Age: </label><input name="age" type="text"><br>
+							<label>Address: </label><input name="address" type="text"><br>
+							<label>Phone Number: </label><input name="phone_number" type="text"><br>
+							<label>Picture url: </label><input name="picture" type="text"><br>
+							<label>Choose group: </label>
+							<select>
+								<option value="7">Friends</option>
+								<option value="8">Family</option>
+								<option value="9">Work</option>
+							</select><br>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+						<button class="delete btn btn-danger">Delete Contact</button>
+						<button class="edit btn btn-primary">Make Changes</button>
+					</div>
+				</div>
+			</div>
+		</div> <!-- end edit contact modal -->
 	</div>
-	
-	<script src='javascripts/scripts.js'></script>
+
+		
+
+	<script src='javascripts/test.js'></script>
 </body>
 </html>

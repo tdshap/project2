@@ -23,7 +23,6 @@ get("/categories/:id") do
 end
 
 post("/categories") do
-
   category = Category.create(category_params(params))
 
   category.to_json
@@ -53,7 +52,6 @@ get("/contacts/:id") do
 end
 
 post("/contacts") do
-
   contact = Contact.create(contact_params(params))
   contact.to_json
 end

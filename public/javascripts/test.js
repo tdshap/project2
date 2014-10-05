@@ -1,6 +1,10 @@
 var ContactsModel = Backbone.Model.extend({
 	urlRoot: "/contacts"
 })
+
+var CategoriesModel = Backbone.Model.extend({
+	urlRoot: "/categories"
+})
 // ##########################################################
 // 3 collections with instantiations
 
@@ -8,7 +12,7 @@ var ContactsModel = Backbone.Model.extend({
 // Family
 var FamilyCollection = Backbone.Collection.extend({
 	url: "/contacts",
-	model: ContactsModel
+	model: ContactsModel, 
 })
 var familyCollection = new FamilyCollection();
 
@@ -29,10 +33,38 @@ var friendsCollection = new FriendsCollection();
 // ##########################################################
 // 3 views with instantiations
 
+
+var FamilyView = Backbone.View.extend({
+	tagName: "tr",
+	template: _.template($("#family-list-template").html()),
+	events: {
+	    "click button.edit" : "update",
+	},
+
+	initilize: function(){
+		this.listenTo(editView, "destroy", this.destroy)
+
+	},
+  destroy: function(event) {
+    console.log("i can listen!")
+    // this.model.destroy();
+  },
+
+  update: function(event) {
+  	console.log("updated pushed")
+  	console.log(this)
+  	console.log(event)
+    // this.model.set('number', this.$el.find('input[name="quantity"]').val());
+    // this.model.save();
+  },
+
+	render: function() {
+		this.$el.html(this.template(this.model.attributes));
+	}, 
+})
+
 // family LIST VIEW
 var FamilylistView = Backbone.View.extend({
-	
-	el: "ul.family",
 	initialize: function() {
 		this.listenTo(this.collection, "add", this.addOne);
 		familyCollection.fetch();
@@ -41,51 +73,61 @@ var FamilylistView = Backbone.View.extend({
 		var familyView = new FamilyView ({ model : a });
 		if (a.get("category_id") == 8){
 			familyView.render();
-			this.$el.append(familyView.el)
+			$("tbody.family").append(familyView.el);
+		
 		}
 	}
 })
-var familylistView = new FamilylistView ({ collection: familyCollection})
+var familylistView = new FamilylistView ({ 
+	collection: familyCollection,
+	el: "tbody.family"
+})
+
+var editfamilyView = new FamilyView ({
+	el: $("div.edit")
+})
 
 
-var FamilyView = Backbone.View.extend({
-	tagName: "li",
-
+var WorkView = Backbone.View.extend({
+	tagName: "tr",
+	template: _.template($("#work-list-template").html()),
 	render: function() {
-		this.$el.html(this.model.get("name") + this.model.get("age") + this.model.get("address") + this.model.get("phone_number") + this.model.get("picture"));
+		this.$el.html(this.template(this.model.attributes));
 	}, 
 })
 
 // work LIST VIEW
 var WorklistView = Backbone.View.extend({
-	el: "ul.work",
+
 	initialize: function() {
 		this.listenTo(this.collection, "add", this.addOne);
 		workCollection.fetch();
 	},
-		addOne: function(a){
-		var workView = new WorkView ({ model : a });
-		if (a.get("category_id") == 9){
+		addOne: function(contact){
+		var workView = new WorkView ({ model : contact });
+		if (contact.get("category_id") == 9){
 			workView.render();
-			console.log(workView.el)
-			this.$el.append(workView.el)
+			$("tbody.work").append(workView.el);
 		}
 	}
 })
-var worklistView = new WorklistView ({ collection: workCollection })
+var worklistView = new WorklistView ({ 
+	collection: workCollection,
+	el: "tbody.work" 
+})
 
-var WorkView = Backbone.View.extend({
-	tagName: "li",
 
+var FriendsView = Backbone.View.extend({
+	tagName: "tr",
+	template: _.template($("#friends-list-template").html() ),
+	
 	render: function() {
-		this.$el.html(this.model.get("name") + this.model.get("age") + this.model.get("address") + this.model.get("phone_number") + this.model.get("picture"));
+		this.$el.html(this.template(this.model.attributes));
 	}, 
 })
 
 // friends LIST VIEW 
 var FriendslistView = Backbone.View.extend({
-	
-	// el: "ul.friends",
 	initialize: function() {
 		this.listenTo(this.collection, "add", this.addOne);
 		friendsCollection.fetch();
@@ -94,31 +136,24 @@ var FriendslistView = Backbone.View.extend({
 		var friendsView = new FriendsView ({ model : a });
 		if (a.get("category_id") == 7){
 			friendsView.render();
-			this.$el.append(friendsView.el)
+			$("tbody.friends").append(friendsView.el);
 		}
 	}
 })
 
-var friendslistView = new FriendslistView ({ collection: friendsCollection })
-
-var FriendsView = Backbone.View.extend({
-	// tagName: "li",
-	el: "ul.friends",
-	render: function() {
-		this.$el.html(this.model.get("name") + this.model.get("age") + this.model.get("address") + this.model.get("phone_number") + this.model.get("picture"));
-		// var template = _.template($("#friends-list-template").html());
-		// this.$el.html(template({contacts:friendsCollection.models}));
-	}, 
+var friendslistView = new FriendslistView ({ 
+	collection: friendsCollection, 
+	el: "tbody.friends" 
 })
-
 
 
 var FormView = Backbone.View.extend({
 	events: {
-		"click button.add" : "createSomething"
+		"click button#add" : "createSomething"
 	},
 
 	createSomething: function(){
+		console.log(this)
 		var name = this.$el.find('input[name="name"]').val();
 		var age = this.$el.find('input[name="age"]').val();
 		var address = this.$el.find('input[name="address"]').val();
@@ -157,8 +192,11 @@ var FormView = Backbone.View.extend({
 	}
 })
 
-var formView = new FormView({ el: $(".form") })
 
+
+var formView = new FormView({ 
+	el: $("div.add") 
+})
 
 var Router = Backbone.Router.extend({
 	routes: {
@@ -167,9 +205,9 @@ var Router = Backbone.Router.extend({
 })
 var router = new Router;
 router.on("route:home", function(){
-
-	console.log("you have reached the home page")
+	
 })
+
 
 Backbone.history.start();
 
