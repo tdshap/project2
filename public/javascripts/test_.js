@@ -92,7 +92,7 @@ var ModalView = Backbone.View.extend({
 		this.model.save()
 		that.render()
 	}
-	
+
 })
 
 
@@ -256,17 +256,13 @@ var formView = new FormView({
 	el: $("div#addform") 
 })
 
-
-
-
-
 var Router = Backbone.Router.extend({
 	routes: {
 		"": "home",
 	}
 })
 var router = new Router;
-router.on("route:home", function(){
+	router.on("route:home", function(){
 
 	
 })
