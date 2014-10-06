@@ -62,8 +62,7 @@ var FamilyView = Backbone.View.extend({
 	},
 
 	initilize: function(){
-		this.listenTo(editView, "destroy", this.destroy),
-		this.listenTo(this.)
+		this.listenTo(editView, "destroy", this.destroy)
 
 	},
   destroy: function(event) {
@@ -105,13 +104,14 @@ var familylistView = new FamilylistView ({
 
 var editfamilyView = new FamilyView ({
 	el: $("div.edit"),
-	// events: {
-	// 	"click button.delete" : "deleteUser"
-	// },
+	events: {
+		"click button.delete" : "deleteUser",
+		"click button."
+	},
 
-	// deleteUser: function(){
-	// 	familyView.destroy()
-	// },
+	deleteUser: function(){
+		familyView.destroy()
+	},
 
 })
 

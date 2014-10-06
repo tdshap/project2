@@ -2,8 +2,10 @@ var ContactsModel = Backbone.Model.extend({
 	urlRoot: "/contacts",
 
 	validate: function(attributes,options) {
+	  
 	  if (attributes.name.length <= 0){
-	  	alert("please enter name")
+	  	alert("something is wrong!")
+	  	// return("please enter name")
 	  }
 	  else if (attributes.age.length <= 0 || attributes.age < 0 ){
 	  	alert("please enter age")
@@ -18,7 +20,6 @@ var ContactsModel = Backbone.Model.extend({
 	  	alert("please enter picture url")
 	  }
 	}
-
 })
 
 var CategoriesModel = Backbone.Model.extend({
@@ -32,7 +33,6 @@ var CategoriesModel = Backbone.Model.extend({
 var FamilyCollection = Backbone.Collection.extend({
 	url: "/contacts",
 	model: ContactsModel, 
-
 })
 var familyCollection = new FamilyCollection();
 
@@ -53,31 +53,59 @@ var friendsCollection = new FriendsCollection();
 // ##########################################################
 // 3 views with instantiations
 
+var ModalView = Backbone.View.extend({
+	template: _.template($("#edit-modal-template").html() ),
+	events: {
+		"click button.edit": "edit",
+		"click button.delete": "deleteThing"
+	},
+
+	initialize: function(){
+		this.render()
+	},
+	render: function(){
+		this.$el.html(this.template(this.model.attributes))
+		$("div#modalView").html(this.$el)
+	},
+	deleteThing: function(event){
+		console.log("button deleted pushed")
+		this.model.destroy();
+		that.remove()
+
+	},
+	edit: function(){
+		name = this.$el.find('input[name="name"]').val();
+		age = this.$el.find('input[name="age"]').val();
+		address = this.$el.find('input[name="address"]').val();
+		phone_number = this.$el.find('input[name="phone_number"]').val();
+		picture = this.$el.find('input[name="picture"]').val();
+		category_id = this.$el.find('select>option:selected').val();
+
+		this.model.set({
+			name: name, 
+			age: age, 
+			address: address, 
+			phone_number: phone_number, 
+			picture: picture, 
+			category_id: category_id
+		})
+		this.model.save()
+		that.render()
+	}
+	
+})
+
 
 var FamilyView = Backbone.View.extend({
 	tagName: "tr",
 	template: _.template($("#family-list-template").html()),
 	events: {
-	    "click button.edit" : "update",
+	    "click button.editfamily": "passModal",
 	},
-
-	initilize: function(){
-		this.listenTo(editView, "destroy", this.destroy),
-		this.listenTo(this.)
-
+	passModal: function(event){
+		that = this,
+		modalView = new ModalView({ model: this.model })
 	},
-  destroy: function(event) {
-    console.log("i can listen!")
-    // this.model.destroy();
-  },
-
-  update: function(event) {
-  	console.log("updated pushed")
-  	console.log(this)
-  	console.log(event)
-    // this.model.set('number', this.$el.find('input[name="quantity"]').val());
-    // this.model.save();
-  },
 
 	render: function() {
 		this.$el.html(this.template(this.model.attributes));
@@ -103,22 +131,18 @@ var familylistView = new FamilylistView ({
 	el: "tbody.family"
 })
 
-var editfamilyView = new FamilyView ({
-	el: $("div.edit"),
-	// events: {
-	// 	"click button.delete" : "deleteUser"
-	// },
-
-	// deleteUser: function(){
-	// 	familyView.destroy()
-	// },
-
-})
-
 
 var WorkView = Backbone.View.extend({
 	tagName: "tr",
 	template: _.template($("#work-list-template").html()),
+	events: {
+	   "click button.editwork": "passModal",
+	},
+	passModal: function(event){
+		that = this,
+		modalView = new ModalView({ model: this.model })
+	},
+
 	render: function() {
 		this.$el.html(this.template(this.model.attributes));
 	}, 
@@ -148,7 +172,14 @@ var worklistView = new WorklistView ({
 var FriendsView = Backbone.View.extend({
 	tagName: "tr",
 	template: _.template($("#friends-list-template").html() ),
-	
+	events: {
+    "click button.editfriends": "passModal",
+	},
+	passModal: function(event){
+		that = this,
+		modalView = new ModalView({ model: this.model })
+	},
+
 	render: function() {
 		this.$el.html(this.template(this.model.attributes));
 	}, 
@@ -189,6 +220,7 @@ var FormView = Backbone.View.extend({
 		var group = this.$el.find('select>option:selected').val();
 
 		if (group == 8 ){
+			console.log("group 8")
 			familyCollection.create({
 				name: name, 
 				age: age, 
@@ -197,6 +229,7 @@ var FormView = Backbone.View.extend({
 				picture: picture, 
 				category_id: group
 			})
+
 		} else if (group == 7 ){
 			friendsCollection.create({
 				name: name, 
@@ -219,11 +252,13 @@ var FormView = Backbone.View.extend({
 	}
 })
 
-
-
 var formView = new FormView({ 
-	el: $("div.add") 
+	el: $("div#addform") 
 })
+
+
+
+
 
 var Router = Backbone.Router.extend({
 	routes: {
@@ -232,6 +267,7 @@ var Router = Backbone.Router.extend({
 })
 var router = new Router;
 router.on("route:home", function(){
+
 	
 })
 
