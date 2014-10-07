@@ -30,25 +30,15 @@ var CategoriesModel = Backbone.Model.extend({
 
 
 // Family
-var FamilyCollection = Backbone.Collection.extend({
-	url: "/contacts",
-	model: ContactsModel, 
-})
-var familyCollection = new FamilyCollection();
-
-// Work
-var WorkCollection = Backbone.Collection.extend({
+var ContactsCollection = Backbone.Collection.extend({
 	url: "/contacts",
 	model: ContactsModel
 })
-var workCollection = new WorkCollection();
 
-// Friends
-var FriendsCollection = Backbone.Collection.extend({
-	url: "/contacts",
-	model: ContactsModel
-})
-var friendsCollection = new FriendsCollection();
+var familyCollection = new ContactsCollection();
+var workCollection = new ContactsCollection();
+var friendsCollection = new ContactsCollection();
+
 
 // ##########################################################
 // 3 views with instantiations
@@ -68,7 +58,7 @@ var ModalView = Backbone.View.extend({
 		$("div#modalView").html(this.$el)
 	},
 	deleteThing: function(event){
-		console.log("button deleted pushed")
+		console.log("button deleted pushed");
 		this.model.destroy();
 		that.remove()
 
@@ -116,14 +106,26 @@ var FamilyView = Backbone.View.extend({
 var FamilylistView = Backbone.View.extend({
 	initialize: function() {
 		this.listenTo(this.collection, "add", this.addOne);
+		this.listenTo(workCollection, "change:category_id", this.addOne);
+		this.listenTo(friendsCollection, "change:category_id", this.addOne);
+		this.listenTo(this.collection, "change:category_id", this.deleteOne);
+		
 		familyCollection.fetch();
 	},
-		addOne: function(a){
-		var familyView = new FamilyView ({ model : a });
+	addOne: function(a){
+		console.log("add one from family")
+		console.log(this)
+	var familyView = new FamilyView ({ model : a });
+	console.log(this.model)
 		if (a.get("category_id") == 8){
 			familyView.render();
 			$("tbody.family").append(familyView.el);
 		}
+	},
+	deleteOne: function(event){
+		console.log("delete one from family")
+		console.log(this.model)
+		console.log(event)
 	}
 })
 var familylistView = new FamilylistView ({ 
@@ -153,19 +155,29 @@ var WorklistView = Backbone.View.extend({
 
 	initialize: function() {
 		this.listenTo(this.collection, "add", this.addOne);
+		this.listenTo(familyCollection, "change:category_id", this.addOne);
+		this.listenTo(friendsCollection, "change:category_id", this.addOne);
+		this.listenTo(this.collection, "change:category_id", this.deleteOne);
 		workCollection.fetch();
 	},
-		addOne: function(contact){
-		var workView = new WorkView ({ model : contact });
+	addOne: function(contact){
+	console.log("add one from work")
+	console.log(this)
+	var workView = new WorkView ({ model : contact });
 		if (contact.get("category_id") == 9){
 			workView.render();
-			$("tbody.work").append(workView.el);
+			this.$el.append(workView.el);
 		}
+	},
+	deleteOne: function(event){
+		console.log("delete one from work")
+		console.log(event)
+		console.log(this)
 	}
 })
 var worklistView = new WorklistView ({ 
 	collection: workCollection,
-	el: "tbody.work" 
+	el: $("tbody.work") 
 })
 
 
@@ -189,14 +201,24 @@ var FriendsView = Backbone.View.extend({
 var FriendslistView = Backbone.View.extend({
 	initialize: function() {
 		this.listenTo(this.collection, "add", this.addOne);
+		this.listenTo(familyCollection, "change:category_id", this.addOne);
+		this.listenTo(workCollection, "change:category_id", this.addOne);
+		this.listenTo(this.collection, "change:category_id", this.deleteOne);
 		friendsCollection.fetch();
 	},
-		addOne: function(a){
-		var friendsView = new FriendsView ({ model : a });
+	addOne: function(a){
+		console.log("add one from friends")
+		console.log(this)
+	var friendsView = new FriendsView ({ model : a });
 		if (a.get("category_id") == 7){
 			friendsView.render();
 			$("tbody.friends").append(friendsView.el);
 		}
+	},
+	deleteOne: function(event){
+		console.log("delete one from friends")
+		console.log(event)
+		console.log(this)
 	}
 })
 
@@ -220,7 +242,6 @@ var FormView = Backbone.View.extend({
 		var group = this.$el.find('select>option:selected').val();
 
 		if (group == 8 ){
-			console.log("group 8")
 			familyCollection.create({
 				name: name, 
 				age: age, 
@@ -248,19 +269,36 @@ var FormView = Backbone.View.extend({
 				picture: picture, 
 				category_id: group
 			})
+		};
+		function clearForm(){
+			$("input.col-sm-4").val("");
 		}
+		clearForm()
 	}
 })
-
 var formView = new FormView({ 
 	el: $("div#addform") 
 })
+
+var SearchView = Backbone.View.extend({
+	initilize: function(){
+		this.listenTo
+	},
+
+
+})
+
+var searchView = new SearchView({collection: ContactsCollection})
+
+
+
+
 
 var Router = Backbone.Router.extend({
 	routes: {
 		"": "home",
 	}
-})
+});
 var router = new Router;
 	router.on("route:home", function(){
 

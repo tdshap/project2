@@ -127,20 +127,31 @@
 						<h4 class="modal-title" id="myModalLabel">New Contact</h4>
 					</div>
 					<div class="modal-body">
-						<div class="form">
-							<label>Name: </label><input name="name" type="text"><br>
-							<label>Age: </label><input name="age" type="text"><br>
-							<label>Address: </label><input name="address" type="text"><br>
-							<label>Phone Number: </label><input name="phone_number" type="text"><br>
-							<label>Picture url: </label><input name="picture" type="text"><br>
-							<label>Choose group: </label>
-							<select>
+						<div class="row">
+							<label class="col-sm-4">Name: </label><input class="col-sm-4" name="name" type="text"><br>
+						</div>
+						<div class="row">
+							<label class="col-sm-4">Age: </label><input class="col-sm-4" name="age" type="text"><br>
+						</div>
+						<div class="row">	
+							<label class="col-sm-4">Address: </label><input class="col-sm-4" name="address" type="text"><br>
+						</div>
+						<div class="row">
+							<label class="col-sm-4">Phone Number: </label><input class="col-sm-4" name="phone_number" type="text"><br>
+						</div>
+						<div class="row">
+							<label class="col-sm-4">Picture url: </label><input class="col-sm-4" name="picture" type="text"><br>
+						</div>
+						<div class="row">
+							<label class="col-sm-4">Choose group: </label>
+						</div>
+							<select class="col-sm-4">
 								<option value="7">Friends</option>
 								<option value="8">Family</option>
 								<option value="9">Work</option>
 							</select><br>
 						</div>
-					</div>
+					
 					<div class="modal-footer">
 						<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
 						<button id="add" data-dismiss="modal" class="add btn btn-primary">Add</button>
@@ -191,6 +202,6 @@
 
 		
 
-	<script src='javascripts/test2.js'></script>
+	<script src='javascripts/test_.js'></script>
 </body>
 </html>
